@@ -29,9 +29,9 @@ class ImageToIcoGUI:
         file_frame.pack(fill=tk.X, pady=(0, 10))
         
         ttk.Button(file_frame, text="이미지 파일 선택", 
-                  command=self.select_files).pack(side=tk.LEFT, padx=(0, 10))
+                   command=self.select_files).pack(side=tk.LEFT, padx=(0, 10))
         ttk.Button(file_frame, text="초기화", 
-                  command=self.clear_files).pack(side=tk.LEFT)
+                   command=self.clear_files).pack(side=tk.LEFT)
         
         # 파일 리스트
         list_frame = ttk.LabelFrame(main_frame, text="선택된 파일", padding="5")
@@ -51,7 +51,7 @@ class ImageToIcoGUI:
         # 자동 여백 제거
         self.auto_crop_var = tk.BooleanVar(value=True)
         ttk.Checkbutton(settings_frame, text="자동 여백 제거", 
-                       variable=self.auto_crop_var).pack(anchor=tk.W)
+                        variable=self.auto_crop_var).pack(anchor=tk.W)
         
         # 크기 선택
         size_frame = ttk.Frame(settings_frame)
@@ -63,6 +63,7 @@ class ImageToIcoGUI:
         sizes_frame.pack(anchor=tk.W, padx=(20, 0))
         
         self.size_vars = {}
+        # config.py의 ICO_SIZES에 맞춰 256px만 표시되도록 수정
         for i, size in enumerate(ICO_SIZES):
             var = tk.BooleanVar(value=size in DEFAULT_SETTINGS['selected_sizes'])
             self.size_vars[size] = var
@@ -80,20 +81,20 @@ class ImageToIcoGUI:
         
         self.output_path_var = tk.StringVar(value="원본 파일과 같은 폴더")
         ttk.Entry(folder_frame, textvariable=self.output_path_var, 
-                 state="readonly").pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 5))
+                  state="readonly").pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 5))
         ttk.Button(folder_frame, text="선택", 
-                  command=self.select_output_folder).pack(side=tk.RIGHT)
+                   command=self.select_output_folder).pack(side=tk.RIGHT)
         
         # 변환 버튼
         button_frame = ttk.Frame(main_frame)
         button_frame.pack(pady=(10, 0))
         
         self.convert_button = ttk.Button(button_frame, text="변환 시작", 
-                                        command=self.start_conversion)
+                                         command=self.start_conversion)
         self.convert_button.pack(side=tk.LEFT, padx=(0, 10))
         
         self.cancel_button = ttk.Button(button_frame, text="중단", 
-                                       command=self.cancel_conversion, state='disabled')
+                                        command=self.cancel_conversion, state='disabled')
         self.cancel_button.pack(side=tk.LEFT, padx=(0, 10))
         
         ttk.Button(button_frame, text="종료", command=self.root.quit).pack(side=tk.LEFT)
@@ -189,10 +190,10 @@ class ImageToIcoGUI:
                 self.root.after(0, lambda: self.progress_var.set(f"✅ 완료! {success_count}/{total_files}개 성공"))
                 self.root.after(0, lambda: messagebox.showinfo("완료", f"{success_count}개 파일이 변환되었습니다."))
             else:
-                self.root.after(0, lambda: messagebox.showerror("실패", "변환에 실패했습니다."))
+                self.root.after(0, lambda: messagebox.showerror("실패", "변환에 실패했습니다. 콘솔/터미널에서 자세한 오류를 확인하세요.")) # 오류 메시지 수정
         
         except Exception as e:
-            self.root.after(0, lambda: messagebox.showerror("오류", f"변환 중 오류: {str(e)}"))
+            self.root.after(0, lambda: messagebox.showerror("오류", f"변환 중 오류: {str(e)}\n자세한 내용은 콘솔/터미널을 확인하세요.")) # 오류 메시지 수정
         
         finally:
             self.root.after(0, lambda: self.convert_button.config(state='normal'))

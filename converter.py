@@ -137,10 +137,15 @@ class ImageConverter:
                 if images:
                     os.makedirs(os.path.dirname(output_path), exist_ok=True)
                     
-                    images[0].save(
+                    # 1) 오름차순 정렬 → 가장 큰 이미지를 base 로 선택
+                    images.sort(key=lambda im: im.size[0])    # (16 … 256)
+                    base_img = images[-1]                    # 최댓값(256px 등)
+
+                    # 2) 저장
+                    base_img.save(
                         output_path,
                         format='ICO',
-                        sizes=[(img.size[0], img.size[1]) for img in images]
+                        sizes=[im.size for im in images]      # [(16,16)…]
                     )
                     
                     print(f"✅ 저장 완료: {output_path}")
